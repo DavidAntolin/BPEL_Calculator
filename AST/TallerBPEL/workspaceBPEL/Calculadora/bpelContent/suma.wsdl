@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://Suma" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://Suma">
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://Suma">
+            <xs:element name="suma">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="args0" type="xs:int"/>
+                        <xs:element minOccurs="0" name="args1" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="sumaResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="sumaRequest">
+        <wsdl:part name="parameters" element="xsd:suma"/>
+    </wsdl:message>
+    <wsdl:message name="sumaResponse">
+        <wsdl:part name="parameters" element="xsd:sumaResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="SumaPortType">
+        <wsdl:operation name="suma">
+            <wsdl:input message="xsd:sumaRequest" wsaw:Action="urn:suma"/>
+            <wsdl:output message="xsd:sumaResponse" wsaw:Action="urn:sumaResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SumaSoap11Binding" type="xsd:SumaPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="suma">
+            <soap:operation soapAction="urn:suma" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="SumaSoap12Binding" type="xsd:SumaPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="suma">
+            <soap12:operation soapAction="urn:suma" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="SumaHttpBinding" type="xsd:SumaPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="suma">
+            <http:operation location="suma"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Suma">
+        <wsdl:port name="SumaHttpSoap11Endpoint" binding="xsd:SumaSoap11Binding">
+            <soap:address location="http://localhost:8080/axis2/services/Suma"/>
+        </wsdl:port>
+        <wsdl:port name="SumaHttpSoap12Endpoint" binding="xsd:SumaSoap12Binding">
+            <soap12:address location="http://localhost:8080/axis2/services/Suma"/>
+        </wsdl:port>
+        <wsdl:port name="SumaHttpEndpoint" binding="xsd:SumaHttpBinding">
+            <http:address location="http://localhost:8080/axis2/services/Suma"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
